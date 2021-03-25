@@ -1,9 +1,8 @@
 name: unit-tests
-on:
-  push:
-    branches: [ main ]
+on: [push]
 jobs:
   unit:
+    name: Unit tests
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -20,10 +19,17 @@ jobs:
       - name: Check PHP Version
         run: php -v
 
+      - name: Run tests
+        run: php test.php
+
+  static-control:
+    name: Shell static controll
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+      - uses: actions/checkout@v2
+
       - name: Run Shellcheck
         uses: azohra/shell-linter@latest
         with:
           path: "src/tradelog.sh"
-
-      - name: Run tests
-        run: php test.php
