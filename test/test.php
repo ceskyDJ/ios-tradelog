@@ -13,7 +13,8 @@ mb_internal_encoding("UTF-8");
 
 // Script input params
 // test.php -c          Activate extended color mode (with background color)
-$args = getopt("c", ["ext-color"]);
+// test.php -l          Tests are run locally (it needs to use different paths)
+$args = getopt("cl", ["ext-color", "local"]);
 
 // Colors for terminal outputs
 if (key_exists("c", $args) || key_exists("ext-color", $args)) {
@@ -27,6 +28,8 @@ if (key_exists("c", $args) || key_exists("ext-color", $args)) {
     define("RED", "\e[0;31m");
     define("WHITE", "\e[0m");
 }
+
+$local = key_exists("c", $args);
 
 const OUTPUT_ERROR = 1;
 const EXIT_CODE_ERROR = 2;
@@ -135,9 +138,11 @@ $successful = 0;
 $failed = 0;
 $sum = count($tests);
 foreach($tests as $index => $test) {
+    $path = $local ? "../src" : "src";
+
     $output = [];
     $exitCode = 0;
-    exec("cd ../src; {$test['command']}", $output, $exitCode);
+    exec("cd {$path}; {$test['command']}", $output, $exitCode);
 
     $outputAsString = implode("\n", $output);
     $validOutput = file_get_contents("files/{$test['exp-output-f']}");
