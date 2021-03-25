@@ -23,7 +23,7 @@ jobs:
         run: php test.php
 
   static-control:
-    name: Shell static controll
+    name: Shell static check
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
