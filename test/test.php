@@ -175,4 +175,4 @@ echo GREEN.$successRow.WHITE.PHP_EOL;
 echo RED.$failRow.WHITE.PHP_EOL;
 
 // Exit code for Gitlab
-exit($successRate === 100 ? 0 : -1);
+exit($successRate === 100 ? 0 : 1);
