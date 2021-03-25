@@ -29,7 +29,7 @@ if (key_exists("c", $args) || key_exists("ext-color", $args)) {
     define("WHITE", "\e[0m");
 }
 
-$local = key_exists("c", $args);
+$local = key_exists("l", $args);
 
 const OUTPUT_ERROR = 1;
 const EXIT_CODE_ERROR = 2;
@@ -134,18 +134,19 @@ $tests[] = [
 // Get data
 ob_start();
 
+$srcPath = $local ? "../src" : "src";
+$filesPath = $local ? "files" : "test/files";
+
 $successful = 0;
 $failed = 0;
 $sum = count($tests);
 foreach($tests as $index => $test) {
-    $path = $local ? "../src" : "src";
-
     $output = [];
     $exitCode = 0;
-    exec("cd {$path}; {$test['command']}", $output, $exitCode);
+    exec("cd {$srcPath}; {$test['command']}", $output, $exitCode);
 
     $outputAsString = implode("\n", $output);
-    $validOutput = file_get_contents("files/{$test['exp-output-f']}");
+    $validOutput = file_get_contents("{$filesPath}/{$test['exp-output-f']}");
     if($outputAsString === $validOutput) {
         if($exitCode === 0) {
             $successful++;
