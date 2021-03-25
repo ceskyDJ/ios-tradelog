@@ -20,7 +20,7 @@ jobs:
         run: php -v
 
       - name: Run tests
-        run: php test.php
+        run: php test/test.php
 
   static-control:
     name: Shell static check
