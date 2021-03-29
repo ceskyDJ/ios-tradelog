@@ -72,7 +72,8 @@ function datetime_intersect() {
 
 
 # Reformat arguments to stable format
-opts=$(getopt -o ha:b:t:w: -l help: -n "$SCRIPT" -s bash -- "$@") || exit $ARG_ERROR
+# TODO: remove -v
+opts=$(getopt -o ha:b:t:w:v -l help: -n "$SCRIPT" -s bash -- "$@") || exit $ARG_ERROR
 eval set -- "$opts"
 
 # Parse input arguments
@@ -130,6 +131,10 @@ while [ "$1" != "" ] ; do
     shift # Move to the next argument (value of this switch)
     readonly arg_width=$1
     ;;
+  # Setup verbose information logging TODO: remove
+  -v)
+    verbose=true
+    ;;
   # Separator of switches and other arguments (commands and files)
   --)
     # Only skip this "mark argument"
@@ -176,11 +181,13 @@ else
 fi
 
 # TODO: remove, it's just for the info
-echo "Command : $arg_command"
-echo "After   : $arg_after"
-echo "Before  : $arg_before"
-echo "Ticker  : ${arg_tickers[*]}"
-echo "Width   : $arg_width"
+if [ -n "$verbose" ]; then
+  echo "Command : $arg_command"
+  echo "After   : $arg_after"
+  echo "Before  : $arg_before"
+  echo "Ticker  : ${arg_tickers[*]}"
+  echo "Width   : $arg_width"
+fi
 
 # TODO: for future data processing
 eval "$input | cat"
