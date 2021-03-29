@@ -203,11 +203,11 @@ fi
 
 # Debug information after processing arguments
 if [ -n "$arg_verbose" ]; then
-  echo "Command : $arg_command"
-  echo "After   : $arg_after"
-  echo "Before  : $arg_before"
-  echo "Ticker  : ${arg_tickers[*]}"
-  echo "Width   : $arg_width"
+  echo "Command : $arg_command" >&2
+  echo "After   : $arg_after" >&2
+  echo "Before  : $arg_before" >&2
+  echo "Ticker  : ${arg_tickers[*]}" >&2
+  echo "Width   : $arg_width" >&2
 fi
 
 # Apply filtering and data processing (filters and command, respectively)
