@@ -75,12 +75,24 @@ function datetime_intersect() {
   date -d "@$intersect" "+%Y-%m-%d %H:%M:%S"
 }
 
+# Filters logs for tickers set by -t switches (from arg_tickers, respectively)
+# Stdin: log files content to be filtered
+# Stdout: logs contains tickers set by -t switches
+function ticker_filter() {
+  if [ -n "$arg_tickers" ]; then
+    # Regex checks, if the line starts with datetime and in the second cell is exactly one of the tickers
+    cat | grep -E "^[0-9 -:]*;(${arg_tickers// /|});"
+  else
+    cat
+  fi
+}
+
 # Filters output with rules from script's input arguments
 # Stdin: concatenated content of log files (or outer stdin)
 # Stdout: filtered logs using rules set up by script's switches
 # TODO: Add Stderr if some output goes there
 function filter_output() {
-    cat
+  eval "cat | ticker_filter"
 }
 
 # Applies command on the provided logs
@@ -88,7 +100,7 @@ function filter_output() {
 # Stdout: Output of the command
 # TODO: Add Stderr if some output goes there
 function apply_command() {
-    cat
+  cat
 }
 
 ########################################################################################################################
@@ -140,7 +152,8 @@ while [ "$1" != "" ] ; do
   # Filter TICKER
   -t)
     shift # Move to the next argument (value of this switch)
-    arg_tickers+=("$1")
+    arg_tickers+=${arg_tickers+ } # Add space before second and every next item
+    arg_tickers+="$1"
     ;;
   # Width of graph
   -w)
@@ -206,7 +219,7 @@ if [ -n "$arg_verbose" ]; then
   echo "Command : $arg_command" >&2
   echo "After   : $arg_after" >&2
   echo "Before  : $arg_before" >&2
-  echo "Ticker  : ${arg_tickers[*]}" >&2
+  echo "Ticker  : $arg_tickers" >&2
   echo "Width   : $arg_width" >&2
 fi
 
