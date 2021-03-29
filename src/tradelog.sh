@@ -19,7 +19,7 @@ fi
 function write_help() {
   cat << EOF
 Usage: $SCRIPT [-h|--help] [FILTER]... [COMMAND] [LOG_FILE]...
-Analyzer of logs from stock exchange trading
+Stock exchange trading logs analyzer
 
 You can use one of these commands:
   list-tick      shows the list of contained tickers
