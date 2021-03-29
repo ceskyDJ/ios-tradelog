@@ -13,7 +13,9 @@ if [ "$SHELL" != "/bin/bash" ]; then
   exit $SHELL_ERROR
 fi
 
+########################################################################################################################
 # Functions
+# Writes script usage
 function write_help() {
   cat << EOF
 Usage: $SCRIPT [-h|--help] [FILTER]... [COMMAND] [LOG_FILE]...
@@ -56,6 +58,19 @@ value compared to the biggest one.
 EOF
 }
 
+# Counts intersection of two datetime values
+function datetime_intersect() {
+  local first second intersect
+
+  first=$(date -d "$1" "+%s")
+  second=$(date -d "$2" "+%s")
+
+  intersect=$(( (first + second) / 2 ))
+  date -d "@$intersect" "+%Y-%m-%d %H:%M:%S"
+}
+########################################################################################################################
+
+
 # Reformat arguments to stable format
 opts=$(getopt -o ha:b:t:w: -l help: -n "$SCRIPT" -s bash -- "$@") || exit $ARG_ERROR
 eval set -- "$opts"
@@ -81,16 +96,11 @@ while [ "$1" != "" ] ; do
       arg_after=$1
     else
       # Count intersect of last and new datetime
-      first=$(date -d "$arg_after" "+%s")
-      second=$(date -d "$1" "+%s")
-
-      intersect=$(( (first + second) / 2 ))
-      arg_after=$(date -d "@$intersect" "+%Y-%m-%d %H:%M:%S")
+      arg_after=$(datetime_intersect "$arg_after" "$1")
     fi
     ;;
   # Filter before DATETIME
   -b)
-    # TODO: Try to resolve this redundancy code...
     shift # Move to the next argument (value of this switch)
 
     if ! date --date="$1" > /dev/null 2>&1 ; then
@@ -102,11 +112,7 @@ while [ "$1" != "" ] ; do
       arg_before=$1
     else
       # Count intersect of last and new datetime
-      first=$(date -d "$arg_before" "+%s")
-      second=$(date -d "$1" "+%s")
-
-      intersect=$(( (first + second) / 2 ))
-      arg_before=$(date -d "@$intersect" "+%Y-%m-%d %H:%M:%S")
+      arg_before=$(datetime_intersect "$arg_before" "$1")
     fi
     ;;
   # Filter TICKER
