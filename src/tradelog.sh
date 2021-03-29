@@ -94,7 +94,6 @@ function apply_command() {
 ########################################################################################################################
 
 # Reformat arguments to stable format
-# TODO: remove -v
 opts=$(getopt -o ha:b:t:w:v -l help: -n "$SCRIPT" -s bash -- "$@") || exit $ARG_ERROR
 eval set -- "$opts"
 
@@ -153,9 +152,9 @@ while [ "$1" != "" ] ; do
     shift # Move to the next argument (value of this switch)
     readonly arg_width=$1
     ;;
-  # Setup verbose information logging TODO: remove
+  # Setup verbose information logging
   -v)
-    verbose=true
+    readonly arg_verbose=true
     ;;
   # Separator of switches and other arguments (commands and files)
   --)
@@ -202,8 +201,8 @@ else
   input="cat /dev/stdin"
 fi
 
-# TODO: remove, it's just for the info
-if [ -n "$verbose" ]; then
+# Debug information after processing arguments
+if [ -n "$arg_verbose" ]; then
   echo "Command : $arg_command"
   echo "After   : $arg_after"
   echo "Before  : $arg_before"
@@ -211,5 +210,5 @@ if [ -n "$verbose" ]; then
   echo "Width   : $arg_width"
 fi
 
-# TODO: for future data processing
+# Apply filtering and data processing (filters and command, respectively)
 eval "$input | filter_output | apply_command"
