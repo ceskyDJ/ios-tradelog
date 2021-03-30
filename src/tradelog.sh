@@ -87,12 +87,34 @@ function ticker_filter() {
   fi
 }
 
+# Filters logs for records with datetime after set limit (in arg_after)
+# Stdin: log files content to be filtered
+# Stdout: logs with datetime after one set by -a switch(es)
+function after_filter() {
+  if [ -n "$arg_after" ]; then
+    cat | awk -F ";" '{ if($1 > arg_after) { print } }' "arg_after=$arg_after"
+  else
+    cat
+  fi
+}
+
+# Filters logs for records with datetime before set limit (in arg_before)
+# Stdin: log files content to be filtered
+# Stdout: logs with datetime before one set by -b switch(es)
+function before_filter() {
+  if [ -n "$arg_before" ]; then
+    cat | awk -F ";" '{ if($1 < arg_before) { print } }' "arg_before=$arg_before"
+  else
+    cat
+  fi
+}
+
 # Filters input with rules from script's input arguments
 # Stdin: concatenated content of log files (or outer stdin)
 # Stdout: filtered logs using rules set up by script's switches
 # TODO: Add Stderr if some output goes there
 function filter_input() {
-  eval "cat | ticker_filter"
+  eval "cat | ticker_filter | after_filter | before_filter"
 }
 
 # Applies command on the provided logs
