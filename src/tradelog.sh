@@ -112,9 +112,8 @@ function before_filter() {
 # Filters input with rules from script's input arguments
 # Stdin: concatenated content of log files (or outer stdin)
 # Stdout: filtered logs using rules set up by script's switches
-# TODO: Add Stderr if some output goes there
 function filter_input() {
-  eval "cat | ticker_filter | after_filter | before_filter"
+  cat | ticker_filter | after_filter | before_filter
 }
 
 # Applies command on the provided logs
