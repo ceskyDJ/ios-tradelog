@@ -137,6 +137,30 @@ function profit_command() {
   awk -F ";" '{ if($3 == "sell") { profit+=$4*$6 } else { profit-=$4*$6 } } END { printf "%.2f\n", profit }'
 }
 
+# Applies pos command
+# Stdin: log files content to apply command to
+# Stdout: list of total values of currently owned positions
+function pos_command() {
+  awk -F ";" '
+    {
+      # Number of owned units
+      if($3 == "buy") {
+        units[$2]+=$6
+      } else {
+        units[$2]-=$6
+      }
+      # List of ticker values - new value replace old one, so at the end there is the newest (the last one)
+      values[$2]=$4
+      # List of ticker names
+      tickers[$2]=$2
+    } END {
+      for(ticker in tickers) {
+        printf "%-11s: %.2f\n", ticker, (values[ticker] * units[ticker])
+      }
+    }
+  ' | sort -nrt ":" -k 2,2
+}
+
 # Applies command on the provided logs
 # Stdin: logs to provide command on
 # Stdout: Output of the command
@@ -155,6 +179,7 @@ function apply_command() {
     profit_command
     ;;
   pos)
+    pos_command
     ;;
   last-price)
     ;;
