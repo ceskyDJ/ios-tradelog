@@ -75,6 +75,9 @@ function datetime_intersect() {
   date -d "@$intersect" "+%Y-%m-%d %H:%M:%S"
 }
 
+# ----------------------------------------------------------------------------------------------------------------------
+# Filters:
+
 # Filters logs for tickers set by -t switches (from arg_tickers, respectively)
 # Stdin: log files content to be filtered
 # Stdout: logs contains tickers set by -t switches
@@ -115,6 +118,9 @@ function before_filter() {
 function filter_input() {
   cat | ticker_filter | after_filter | before_filter
 }
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Commands:
 
 # Applies command on the provided logs
 # Stdin: logs to provide command on
