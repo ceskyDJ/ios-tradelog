@@ -134,7 +134,7 @@ function list_tick_command() {
 # Stdout: final profit from closed transactions
 function profit_command() {
   # Profit is sum of sell transaction values (unit price * volume) - sum of buy transaction values
-  awk -F ";" '{ if($3 == "sell") { profit+=$4*$6 } else { profit-=$4*$6 } } END { print profit }'
+  awk -F ";" '{ if($3 == "sell") { profit+=$4*$6 } else { profit-=$4*$6 } } END { printf "%.2f\n", profit }'
 }
 
 # Applies command on the provided logs
