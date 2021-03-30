@@ -155,7 +155,7 @@ function pos_command() {
       tickers[$2]=$2
     } END {
       for(ticker in tickers) {
-        printf "%-11s: %.2f\n", ticker, (values[ticker] * units[ticker])
+        printf "%-10s: %.2f\n", ticker, (values[ticker] * units[ticker])
       }
     }
   ' | sort -nrt ":" -k 2,2
@@ -173,7 +173,7 @@ function last_price_command() {
       tickers[$2]=$2
     } END {
       for(ticker in tickers) {
-        printf "%-11s: %.2f\n", ticker, (values[ticker])
+        printf "%-10s: %.2f\n", ticker, (values[ticker])
       }
     }
   ' | sort -nrt ":" -k 2,2
