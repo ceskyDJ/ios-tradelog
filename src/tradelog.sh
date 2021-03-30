@@ -87,11 +87,11 @@ function ticker_filter() {
   fi
 }
 
-# Filters output with rules from script's input arguments
+# Filters input with rules from script's input arguments
 # Stdin: concatenated content of log files (or outer stdin)
 # Stdout: filtered logs using rules set up by script's switches
 # TODO: Add Stderr if some output goes there
-function filter_output() {
+function filter_input() {
   eval "cat | ticker_filter"
 }
 
@@ -225,4 +225,4 @@ if [ -n "$arg_verbose" ]; then
 fi
 
 # Apply filtering and data processing (filters and command, respectively)
-eval "$input | filter_output | apply_command"
+eval "$input | filter_input | apply_command"
