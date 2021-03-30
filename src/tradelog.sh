@@ -126,7 +126,7 @@ function filter_input() {
 # Stdin: log files content to apply command to
 # Stdout: unique list of tickers ordered by name alphabetically
 function list_tick_command() {
-  cut -d ";" -f 2 | sort | uniq
+  cut -d ";" -f 2 | sort -u
 }
 
 # Applies command on the provided logs
