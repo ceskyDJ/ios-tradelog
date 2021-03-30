@@ -8,11 +8,11 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Run tests
-        run: ./test/iotest -x
-
       - name: Verbose test output
         run: ./test/iotest -v
+
+      - name: Run tests
+        run: ./test/iotest -x
 
   static-control:
     name: Shell static check
