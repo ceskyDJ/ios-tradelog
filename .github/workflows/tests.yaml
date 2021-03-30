@@ -12,7 +12,7 @@ jobs:
         run: ./test/iotest -v
 
       - name: Run tests
-        run: ./test/iotest -x
+        run: ./test/iotest
 
   static-control:
     name: Shell static check
