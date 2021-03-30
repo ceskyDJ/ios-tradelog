@@ -134,6 +134,11 @@ function list_tick_command() {
 # Stdout: Output of the command
 # TODO: Add Stderr if some output goes there
 function apply_command() {
+  # Command hasn't been set
+  if [ -n "$arg_command" ]; then
+      cat
+  fi
+
   case $arg_command in
   list-tick)
     cat | list_tick_command
