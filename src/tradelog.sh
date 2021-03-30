@@ -135,7 +135,7 @@ function list_tick_command() {
 # TODO: Add Stderr if some output goes there
 function apply_command() {
   # Command hasn't been set
-  if [ -n "$arg_command" ]; then
+  if [ -z "$arg_command" ]; then
       cat
   fi
 
