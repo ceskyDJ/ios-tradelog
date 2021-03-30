@@ -161,6 +161,24 @@ function pos_command() {
   ' | sort -nrt ":" -k 2,2
 }
 
+# Applies last-price command
+# Stdin: log files content to apply command to
+# Stdout: list of last values of currently owned positions
+function last_price_command() {
+  awk -F ";" '
+    {
+      # List of ticker values - new value replace old one, so at the end there is the newest (the last one)
+      values[$2]=$4
+      # List of ticker names
+      tickers[$2]=$2
+    } END {
+      for(ticker in tickers) {
+        printf "%-11s: %.2f\n", ticker, (values[ticker])
+      }
+    }
+  ' | sort -nrt ":" -k 2,2
+}
+
 # Applies command on the provided logs
 # Stdin: logs to provide command on
 # Stdout: Output of the command
@@ -182,6 +200,7 @@ function apply_command() {
     pos_command
     ;;
   last-price)
+    last_price_command
     ;;
   hist-ord)
     ;;
