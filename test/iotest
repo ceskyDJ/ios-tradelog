@@ -47,4 +47,4 @@ You can also check the test case folder to see the actual and expected output fi
 END
 
 # Let know tests failed
-[ $failed ] && exit 1
+[ "$1" == "-x" ] && [ $failed ] && exit 1
