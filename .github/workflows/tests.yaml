@@ -1,26 +1,15 @@
-name: unit-tests
+name: tests
 on: [push]
 jobs:
   unit:
-    name: Unit tests
+    name: IO tests
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Setup PHP, extensions and composer with shivammathur/setup-php
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 7.4
-          extensions: mbstring
-        env:
-          update: true
-
-      - name: Check PHP Version
-        run: php -v
-
       - name: Run tests
-        run: php test/test.php
+        run: ./test/iotest
 
   static-control:
     name: Shell static check
