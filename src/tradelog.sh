@@ -129,6 +129,14 @@ function list_tick_command() {
   cut -d ";" -f 2 | sort -u
 }
 
+# Applies profit command
+# Stdin: log files content to apply command to
+# Stdout: final profit from closed transactions
+function profit_command() {
+  # Profit is sum of sell transaction values (unit price * volume) - sum of buy transaction values
+  awk -F ";" '{ if($3 == "sell") { profit+=$4*$6 } else { profit-=$4*$6 } } END { print profit }'
+}
+
 # Applies command on the provided logs
 # Stdin: logs to provide command on
 # Stdout: Output of the command
@@ -144,6 +152,7 @@ function apply_command() {
     list_tick_command
     ;;
   profit)
+    profit_command
     ;;
   pos)
     ;;
