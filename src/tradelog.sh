@@ -100,6 +100,7 @@ function filter_output() {
 # Stdout: Output of the command
 # TODO: Add Stderr if some output goes there
 function apply_command() {
+  # TODO: list-tick: cut -d ";" -f 2 | sort | uniq
   cat
 }
 
