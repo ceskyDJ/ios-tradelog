@@ -84,7 +84,7 @@ function datetime_intersect() {
 function ticker_filter() {
   if [ -n "$arg_tickers" ]; then
     # Regex checks, if the line starts with datetime and in the second cell is exactly one of the tickers
-    cat | grep -E "^[0-9 -:]*;(${arg_tickers// /|});"
+    grep -E "^[0-9 -:]*;(${arg_tickers// /|});"
   else
     cat
   fi
@@ -95,7 +95,7 @@ function ticker_filter() {
 # Stdout: logs with datetime after one set by -a switch(es)
 function after_filter() {
   if [ -n "$arg_after" ]; then
-    cat | awk -F ";" '{ if($1 > arg_after) { print } }' "arg_after=$arg_after"
+    awk -F ";" '{ if($1 > arg_after) { print } }' "arg_after=$arg_after"
   else
     cat
   fi
@@ -106,7 +106,7 @@ function after_filter() {
 # Stdout: logs with datetime before one set by -b switch(es)
 function before_filter() {
   if [ -n "$arg_before" ]; then
-    cat | awk -F ";" '{ if($1 < arg_before) { print } }' "arg_before=$arg_before"
+    awk -F ";" '{ if($1 < arg_before) { print } }' "arg_before=$arg_before"
   else
     cat
   fi
@@ -116,7 +116,7 @@ function before_filter() {
 # Stdin: concatenated content of log files (or outer stdin)
 # Stdout: filtered logs using rules set up by script's switches
 function filter_input() {
-  cat | ticker_filter | after_filter | before_filter
+  ticker_filter | after_filter | before_filter
 }
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -126,7 +126,7 @@ function filter_input() {
 # Stdin: log files content to apply command to
 # Stdout: unique list of tickers ordered by name alphabetically
 function list_tick_command() {
-    cat | cut -d ";" -f 2 | sort | uniq
+  cut -d ";" -f 2 | sort | uniq
 }
 
 # Applies command on the provided logs
@@ -141,7 +141,7 @@ function apply_command() {
 
   case $arg_command in
   list-tick)
-    cat | list_tick_command
+    list_tick_command
     ;;
   profit)
     ;;
