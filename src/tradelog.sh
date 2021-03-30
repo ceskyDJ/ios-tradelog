@@ -122,13 +122,33 @@ function filter_input() {
 # ----------------------------------------------------------------------------------------------------------------------
 # Commands:
 
+# Applies list-tick command
+# Stdin: log files content to apply command to
+# Stdout: unique list of tickers ordered by name alphabetically
+function list_tick_command() {
+    cat | cut -d ";" -f 2 | sort | uniq
+}
+
 # Applies command on the provided logs
 # Stdin: logs to provide command on
 # Stdout: Output of the command
 # TODO: Add Stderr if some output goes there
 function apply_command() {
-  # TODO: list-tick: cut -d ";" -f 2 | sort | uniq
-  cat
+  case $arg_command in
+  list-tick)
+    cat | list_tick_command
+    ;;
+  profit)
+    ;;
+  pos)
+    ;;
+  last-price)
+    ;;
+  hist-ord)
+    ;;
+  graph-pos)
+    ;;
+  esac
 }
 
 ########################################################################################################################
