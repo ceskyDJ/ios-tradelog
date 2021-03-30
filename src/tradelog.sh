@@ -158,7 +158,7 @@ function pos_command() {
         printf "%-10s: %.2f\n", ticker, (values[ticker] * units[ticker])
       }
     }
-  ' | sort -nrt ":" -k 2,2
+  ' | sort -nrt ":" -k 2,2 | column -ts ":" -o ":" -R 2
 }
 
 # Applies last-price command
@@ -176,7 +176,7 @@ function last_price_command() {
         printf "%-10s: %.2f\n", ticker, (values[ticker])
       }
     }
-  ' | sort -nrt ":" -k 2,2
+  ' | sort -nrt ":" -k 2,2 | column -ts ":" -o ":" -R 2
 }
 
 # Applies command on the provided logs
