@@ -180,21 +180,29 @@ function last_price_command() {
   ' | sort -t ":" -k 1,1 | column -ts ":" -o ":" -R 2
 }
 
+# Applies graph-pos command
+# Stdin: log files content to apply command to
+# Stdout: ASCII graph of total values of currently owned positions
 function graph_pos_command() {
   pos_command | sed -r "s/-([0-9.]+)/\1-/" | sort -nrt ":" -k 2,2 | awk -F ":" '
+    # Get maximum
     NR == 1 {
       max = $2
     } {
+      # Is it negative number? (contains "-" char)
       negative = index($2, "-") != 0
 
+      # Number of UNICODE chars to be displayed
       if(arg_width == "") {
         x = int($2 / 1000)
       } else {
         x = int(($2 * arg_width) / max)
       }
 
+      # Print ticker name and other stuff exclude graph
       printf "%-10s:", $1
 
+      # Print graph
       if(x > 0) {
         printf " "
         for(i = 0; i < x; i++) {
@@ -213,7 +221,6 @@ function graph_pos_command() {
 # Applies command on the provided logs
 # Stdin: logs to provide command on
 # Stdout: Output of the command
-# TODO: Add Stderr if some output goes there
 function apply_command() {
   # Command hasn't been set
   if [ -z "$arg_command" ]; then
@@ -234,6 +241,7 @@ function apply_command() {
     last_price_command
     ;;
   hist-ord)
+    hist_ord_command
     ;;
   graph-pos)
     graph_pos_command
