@@ -1,6 +1,7 @@
 #!/bin/bash
 
 export POSIXLY_CORRECT=yes
+export LC_ALL=C
 
 readonly SHELL_ERROR=1
 readonly ARG_ERROR=2
@@ -179,6 +180,36 @@ function last_price_command() {
   ' | sort -t ":" -k 1,1 | column -ts ":" -o ":" -R 2
 }
 
+function graph_pos_command() {
+  pos_command | sed -r "s/-([0-9.]+)/\1-/" | sort -nrt ":" -k 2,2 | awk -F ":" '
+    NR == 1 {
+      max = $2
+    } {
+      negative = index($2, "-") != 0
+
+      if(arg_width == "") {
+        x = int($2 / 1000)
+      } else {
+        x = int(($2 * arg_width) / max)
+      }
+
+      printf "%-10s:", $1
+
+      if(x > 0) {
+        printf " "
+        for(i = 0; i < x; i++) {
+          if(negative) {
+            printf "!"
+          } else {
+            printf "#"
+          }
+        }
+      }
+      printf "\n"
+    }
+  ' "arg_width=$arg_width" | sort -t ":" -k 1,1
+}
+
 # Applies command on the provided logs
 # Stdin: logs to provide command on
 # Stdout: Output of the command
@@ -205,6 +236,7 @@ function apply_command() {
   hist-ord)
     ;;
   graph-pos)
+    graph_pos_command
     ;;
   esac
 }
