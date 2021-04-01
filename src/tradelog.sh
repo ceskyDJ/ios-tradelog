@@ -1,6 +1,6 @@
 #!/bin/bash
 
-POSIXLY_CORRECT=yes
+export POSIXLY_CORRECT=yes
 
 readonly SHELL_ERROR=1
 readonly ARG_ERROR=2
