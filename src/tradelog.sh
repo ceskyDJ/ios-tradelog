@@ -194,18 +194,18 @@ function graph_pos_command() {
 
       # Number of UNICODE chars to be displayed
       if(arg_width == "") {
-        x = int($2 / 1000)
+        graph_size = int($2 / 1000)
       } else {
-        x = int(($2 * arg_width) / max)
+        graph_size = int(($2 * arg_width) / max)
       }
 
       # Print ticker name and other stuff exclude graph
       printf "%-10s:", $1
 
       # Print graph
-      if(x > 0) {
+      if(graph_size > 0) {
         printf " "
-        for(i = 0; i < x; i++) {
+        for(i = 0; i < graph_size; i++) {
           if(negative) {
             printf "!"
           } else {
@@ -214,6 +214,49 @@ function graph_pos_command() {
         }
       }
       printf "\n"
+    }
+  ' "arg_width=$arg_width" | sort -t ":" -k 1,1
+}
+
+# Applies hist-ord command
+# Stdin: log files content to apply command to
+# Stdout: ASCII histogram of number of transaction for currently owned positions
+function hist_ord_command() {
+  awk -F ";" '
+    {
+      # Counting number of transactions for each ticker
+      transactions[$2]+=1
+      # List of ticker names
+      tickers[$2]=$2
+    } END {
+      # Find maximum number of transactions
+      max = 0
+      for(ticker in tickers) {
+        if(transactions[ticker] > max) {
+          max = transactions[ticker]
+        }
+      }
+
+      for(ticker in tickers) {
+        # Number of UNICODE chars to be displayed
+        if(arg_width == "") {
+          hist_size = transactions[ticker]
+        } else {
+          hist_size = int((transactions[ticker] * arg_width) / max)
+        }
+
+        # Print ticker name and other stuff exclude graph
+        printf "%-10s:", ticker
+
+        # Print graph
+        if(hist_size > 0) {
+          printf " "
+          for(i = 0; i < hist_size; i++) {
+            printf "#"
+          }
+        }
+        printf "\n"
+      }
     }
   ' "arg_width=$arg_width" | sort -t ":" -k 1,1
 }
