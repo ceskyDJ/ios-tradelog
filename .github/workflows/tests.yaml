@@ -8,9 +8,6 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Install column command
-        run: sudo apt-get install bsdmainutils
-
       - name: Verbose test output
         run: ./test/iotest -v
 
