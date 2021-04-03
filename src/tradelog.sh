@@ -150,16 +150,26 @@ function pos_command() {
       } else {
         units[$2]-=$6
       }
+
       # List of ticker values - new value replace old one, so at the end there is the newest (the last one)
       values[$2]=$4
       # List of ticker names
       tickers[$2]=$2
     } END {
+      # Find the longest number
       for(ticker in tickers) {
-        printf "%-10s: %.2f\n", ticker, (values[ticker] * units[ticker])
+        tmp = sprintf("%.2f", values[ticker] * units[ticker])
+
+        if(length(tmp) > max) {
+          max = length(tmp)
+        }
+      }
+
+      for(ticker in tickers) {
+        printf "%-10s: %*.2f\n", ticker, max, (values[ticker] * units[ticker])
       }
     }
-  ' | sort -nrt ":" -k 2,2 | column -ts ":" -o ":" -R 2
+  ' | sort -nrt ":" -k 2,2
 }
 
 # Applies last-price command
@@ -172,12 +182,17 @@ function last_price_command() {
       values[$2]=$4
       # List of ticker names
       tickers[$2]=$2
+
+      # Find the longest number
+      if(length($4) > max) {
+        max = length($4)
+      }
     } END {
       for(ticker in tickers) {
-        printf "%-10s: %.2f\n", ticker, (values[ticker])
+        printf "%-10s: %*.2f\n", ticker, max, (values[ticker])
       }
     }
-  ' | sort -t ":" -k 1,1 | column -ts ":" -o ":" -R 2
+  ' | sort -t ":" -k 1,1
 }
 
 # Applies graph-pos command
