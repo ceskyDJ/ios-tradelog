@@ -310,7 +310,14 @@ function apply_command() {
 ########################################################################################################################
 
 # Reformat arguments to stable format
-opts=$(getopt -o ha:b:t:w:v -l help: -n "$SCRIPT" -s bash -- "$@") || exit $ARG_ERROR
+getopt -T > /dev/null
+if [ $? == 4 ]; then
+  # General version for new versions of getopt program
+  opts=$(getopt -o ha:b:t:w:v -l help: -n "$SCRIPT" -s bash -- "$@") || exit $ARG_ERROR
+else
+  # Compatibility mode for older version of getopt program
+  opts=$(getopt ha:b:t:w:v "$@") || exit $ARG_ERROR
+fi
 eval set -- "$opts"
 
 # Parse input arguments
