@@ -60,20 +60,53 @@ value compared to the biggest one.
 EOF
 }
 
+# Checks if the datetime input from switches "-a" and "-b" is valid
+# Args:
+#  - datetime string (YYYY-mm-dd HH:MM:SS)
+#  - name of the switch providing this input argument
+# Stderr: invalid date
+function check_datetime() {
+  # New versions of date doesn't know -j switch used in old versions of the program
+  date -j > /dev/null 2>&1
+  if [ $? == 1 ]; then
+    # New version of date
+    date -d "$1" > /dev/null 2>&1
+  else
+    # Old versions of date
+    date -j -f "%Y-%m-%d %H:%M:%S" "$1" > /dev/null 2>&1
+  fi
+
+  if [ $? == 1 ]; then
+    echo "Invalid datetime in switch $2" >&2
+    exit $ARG_ERROR
+  fi
+}
+
 # Counts intersection of two datetime values
 # Args:
 #  - first datetime
 #  - second datetime
 # Stdout: intersection of provided datetime values in format YYYY-mm-dd HH:MM:SS (see usage)
-# Stderr: invalid date (from date command)
 function datetime_intersect() {
   local first second intersect
 
-  first=$(date -d "$1" "+%s")
-  second=$(date -d "$2" "+%s")
+  # New versions of date doesn't know -j switch used in old versions of the program
+  date -j > /dev/null 2>&1
+  if [ $? == 1 ]; then
+    # New version of date
+    first=$(date -d "$1" "+%s")
+    second=$(date -d "$2" "+%s")
 
-  intersect=$(( (first + second) / 2 ))
-  date -d "@$intersect" "+%Y-%m-%d %H:%M:%S"
+    intersect=$(( (first + second) / 2 ))
+    date -d "@$intersect" "+%Y-%m-%d %H:%M:%S"
+  else
+    # Old versions of date
+    first=$(date -j -f "%Y-%m-%d %H:%M:%S" "$1" "+%s")
+    second=$(date -j -f "%Y-%m-%d %H:%M:%S" "$2" "+%s")
+
+    intersect=$(( (first + second) / 2 ))
+    date -j -f "%s" "$intersect" "+%Y-%m-%d %H:%M:%S"
+  fi
 }
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -332,10 +365,7 @@ while [ "$1" != "" ] ; do
   -a)
     shift # Move to the next argument (value of this switch)
 
-    if ! date --date="$1" > /dev/null 2>&1 ; then
-      echo "Invalid datetime in switch -a" >&2
-      exit $ARG_ERROR
-    fi
+    check_datetime "$1" "-a"
 
     if [ -z "$arg_after" ]; then
       arg_after=$1
@@ -348,10 +378,7 @@ while [ "$1" != "" ] ; do
   -b)
     shift # Move to the next argument (value of this switch)
 
-    if ! date --date="$1" > /dev/null 2>&1 ; then
-      echo "Invalid datetime in switch -b" >&2
-      exit $ARG_ERROR
-    fi
+    check_datetime "$1" "-b"
 
     if [ -z "$arg_before" ]; then
       arg_before=$1
