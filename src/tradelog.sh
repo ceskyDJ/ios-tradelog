@@ -10,7 +10,8 @@ readonly ARG_ERROR=2
 readonly SCRIPT="$(basename "$0")"
 
 # Check if the Bash Shell is really used
-if [ "$SHELL" != "/bin/bash" ]; then
+if [ -z "$BASH_VERSION" ] ; then
+  echo "You are using bad Shell. This script has been written for Bash" >&2
   exit $SHELL_ERROR
 fi
 
