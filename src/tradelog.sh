@@ -343,13 +343,14 @@ function apply_command() {
 ########################################################################################################################
 
 # Reformat arguments to stable format
-getopt -T > /dev/null
+getopt -T > /dev/null 2>&1
 if [ $? == 4 ]; then
   # General version for new versions of getopt program
   opts=$(getopt -o ha:b:t:w:v -l help: -n "$SCRIPT" -s bash -- "$@") || exit $ARG_ERROR
 else
   # Compatibility mode for older version of getopt program
   opts=$(getopt ha:b:t:w:v "$@") || exit $ARG_ERROR
+  opts=$(echo "$opts" | sed -Er "s/([0-9]{4}-[0-9]{2}-[0-9]{2}) ([0-9]{2}:[0-9]{2}:[0-9]{2})/'\1 \2'/g")
 fi
 eval set -- "$opts"
 
