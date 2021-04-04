@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 export POSIXLY_CORRECT=yes
 export LC_ALL=C
