@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Stock exchange trading logs analyzer
+# Author: Michal Šmahel (xsmahe01)
+# Date: March-April 2021
 
 export POSIXLY_CORRECT=yes
 export LC_ALL=C
